@@ -1,73 +1,148 @@
-# React + TypeScript + Vite
+# 🛍️ FreshMart — Shopping Basket App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + Redux Toolkit application that lets users select grocery products, apply special offers automatically, and view a calculated bill with savings.
 
-Currently, two official plugins are available:
+🔗 **Live Demo:** [fresshmart-grocery.netlify.app](https://fresshmart-grocery.netlify.app/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## 📋 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Browse a product catalogue (Bread, Milk, Cheese, Soup, Butter)
+- Add/remove items and adjust quantities in the basket
+- Special offers applied automatically:
+  - 🧀 Buy a Cheese, get a second Cheese free
+  - 🍲 Buy a Soup, get a half price Bread
+  - 🧈 Get a third off Butter
+- Per-item savings displayed inline
+- Bill breakdown: Subtotal → Applied Offers → Total Savings → Final Total
+- Basket persisted to **Firebase Firestore** (survives page refresh)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🛠️ Tech Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+| Layer | Technology |
+|---|---|
+| Framework | React 18 + TypeScript |
+| State Management | Redux Toolkit |
+| UI Components | Material UI (MUI) v5 |
+| Styling | MUI `sx` prop + Tailwind CSS v4 |
+| Database | Firebase Firestore |
+| Build Tool | Vite |
+| Testing | Vitest + React Testing Library |
+| Deployment | Netlify |
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm 9+
+
+### Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/prachii-yadav/freshmart.git
+cd freshmart
+
+# Install dependencies
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create a `.env` file in the root directory:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+VITE_FIREBASE_API_KEY=your_api_key
+VITE_FIREBASE_AUTH_DOMAIN=your_auth_domain
+VITE_FIREBASE_PROJECT_ID=your_project_id
+VITE_FIREBASE_STORAGE_BUCKET=your_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+VITE_FIREBASE_APP_ID=your_app_id
+VITE_FIREBASE_MEASUREMENT_ID=your_measurement_id
 ```
+
+### Run locally
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173)
+
+### Run tests
+
+```bash
+npm test
+```
+
+### Production build
+
+```bash
+npm run build
+```
+
+---
+
+## 🏗️ Project Structure
+
+```
+src/
+├── components/
+│   ├── ProductList.tsx     # Products panel with Add buttons
+│   ├── Basket.tsx          # Basket panel with totals
+│   └── BasketItem.tsx      # Individual basket row
+├── store/
+│   ├── basketSlice.ts      # Redux slice (add, increment, decrement, clear)
+│   ├── selectors.ts        # Memoised basket summary selector
+│   ├── hooks.ts            # Typed useAppDispatch / useAppSelector
+│   └── index.ts            # Redux store
+├── services/
+│   └── firestoreService.ts # Firebase save/load basket
+├── utils/
+│   └── offers.ts           # Special offers calculation logic
+├── data/
+│   └── products.ts         # Product catalogue
+├── types/
+│   └── index.ts            # TypeScript interfaces
+├── test/
+│   ├── offers.test.ts      # Unit tests for offers logic
+│   ├── basketSlice.test.ts # Unit tests for Redux slice
+│   └── selectors.test.ts   # Unit tests for selectors
+└── firebase.ts             # Firebase initialisation
+```
+
+---
+
+## 🏷️ Special Offers Logic
+
+| Offer | Rule |
+|---|---|
+| Cheese BOGOF | Every 2 cheeses → 1 free |
+| Soup + Bread | Each soup gives 1 half-price bread |
+| Butter discount | Every butter is 1/3 off |
+
+---
+
+## ✅ Tests
+
+22 unit tests covering:
+- All 3 offer rules and edge cases
+- Redux reducer actions
+- Basket summary selector (including the full screenshot scenario)
+
+```bash
+npm test
+```
+
+---
+
+## 📦 Deployment
+
+Deployed on **Netlify** with automatic deploys on push to `main`.
+
+Environment variables are configured in Netlify's dashboard (not committed to the repo).
